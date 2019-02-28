@@ -1,18 +1,12 @@
 package problem04;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -50,35 +44,72 @@ public class Main {
 			answerList.remove(randomIndex);
 		}
 		endTime = (int) (System.currentTimeMillis() / 1000);
-		
-		
+
 		System.out.println(correctCount);
 		System.out.println(endTime - startTime);
-		
-		Recode recode = new Recode(correctCount, endTime - startTime);
+
 		ArrayList<Recode> recodeList = new ArrayList<Recode>();
-			FileInputStream fis = null;
-			ObjectInputStream ois = null;
-			
-		try{
-			
-			// object.dat 파일로 부터 객체를 읽어오는 스트림을 생성한다.
+
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+
+		try {
 			fis = new FileInputStream("object.dat");
 			ois = new ObjectInputStream(fis);
-			
-			while(ois.readObject()!=null) {
-				
+
+			while (ois.readObject() != null) {
+				recodeList.add((Recode) ois.readObject());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+			if (fis != null)
+				try {
+					fis.close();
+				} catch (IOException e) {
+				}
+			if (ois != null)
+				try {
+					ois.close();
+				} catch (IOException e) {
+				}
+		}
+
+		Recode recode = new Recode(correctCount, endTime - startTime);
+		recodeList.add(recode);
+		Recode r = new Recode();
+		Collections.sort(recodeList, r);
+
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+
+		try {
+
+			fos = new FileOutputStream("object.dat");
+			oos = new ObjectOutputStream(fos);
+
+			for (int i = 0; i < recodeList.size(); i++) {
+				oos.writeObject(recodeList.get(i));
 			}
 
-		}catch(Exception e){
+		} catch (Exception e) {
+
 			e.printStackTrace();
-		}finally{
-			
-			// 스트림을 닫아준다.
-			if(fis != null) try{fis.close();}catch(IOException e){}
-			if(ois != null) try{ois.close();}catch(IOException e){}
+
+		} finally {
+
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+				}
+			if (oos != null)
+				try {
+					oos.close();
+				} catch (IOException e) {
+				}
 		}
-		
-		
+
 	}
 }

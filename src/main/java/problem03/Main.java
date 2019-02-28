@@ -16,10 +16,10 @@ public class Main {
 		}
 
 		System.out.println("======================================");
-
+		
 		stack = new MyStack(3);
 		stack.push("Hello");
-
+		
 		System.out.println(stack.pop());
 		System.out.println(stack.pop());
 	}
